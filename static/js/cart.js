@@ -15,21 +15,17 @@ for (var i = 0; i < updateBtns.length; i++) {
     });
 }
 
-function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-}
+
 
 function updateUserOrder(productId, action) {
     console.log('user is logged in , sending data')
-    var url = '/update_item/';
+    var url = 'update_Item';
 
     fetch(url, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')
+            'X-CSRFToken': getToken('csrftoken')
         },
         body: JSON.stringify({ 'productId': productId, 'action': action })
     })
