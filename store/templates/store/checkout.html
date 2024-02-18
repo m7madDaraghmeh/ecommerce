@@ -62,7 +62,7 @@
 				</div>
 				{% endfor %}
 				<h5 style="color: black;">Items: {{ order.get_cart_items }}</h5>
-				<h5 style="color: black;"> Total:   ${{ order.get_cart_total }}</h5>
+				<h5 style="color: black;"> Total:   ${{ order.get_cart_total|floatformat:2 }}</h5>
 			</div>
 		</div>
 	</div>

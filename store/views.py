@@ -63,7 +63,7 @@ def updateItem (request):
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
     elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity + 1)
+        orderItem.quantity = (orderItem.quantity - 1)
 
     orderItem.save()
 
