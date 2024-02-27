@@ -3,56 +3,33 @@ from .models import *
 from django.http import JsonResponse
 import json
 import datetime
+from .utils  import cookieCart , cartData
 
 # Create your views here.
 def store(request):
 
-    if request.user.is_authenticated:
-        customer= request.user.customer
-        order, created=Order.objects.get_or_create(customer=customer , complete=False) #this function query an object if it doesnot created then create it 
-        items = order.orderitem_set.all() #query the child object by setting parent value then the child object so it will give all orderitems that have the order variable as parent 
-        cartItems= order.get_cart_items
-    else:
-        items=[]
-        order={ 'get_cart_total' : 0 , 'get_cart_items' : 0, 'shipping' : False  }
-        cartItems=order['get_cart_items']   
-
-
+    data       = cartData(request)
+    cartItems  = data['cartItems']
+      
     products = Product.objects.all()
     context={'products' : products, 'cartItems' : cartItems}
     return render(request , 'store/store.html' , context)
 def cart(request):
 
-    if request.user.is_authenticated:
-        customer= request.user.customer
-        order, created=Order.objects.get_or_create(customer=customer , complete=False) #this function query an object if it doesnot created then create it 
-        items = order.orderitem_set.all() #query the child object by setting parent value then the child object so it will give all orderitems that have the order variable as parent 
-        cartItems= order.get_cart_items
-    else:
-        try:
-            cart= json.loads(request.COOKIES['cart'])
-        except:
-            cart = {}  
-        print('Cart:' , cart)
-        items=[]
-        order={ 'get_cart_total' : 0 , 'get_cart_items' : 0 ,'shipping' : False}
-        cartItems=order['get_cart_items']
+    data       = cartData(request)
+    cartItems  = data['cartItems']
+    order      = data['order']
+    items      = data['items']
 
-        for i in cart :
-            cartItems += cart[i]["quantity"]
+                    
 
     context={'items' : items , 'order' : order ,'cartItems' : cartItems}
     return render(request , 'store/cart.html' , context)
 def checkout(request):
-    if request.user.is_authenticated:
-        customer= request.user.customer
-        order, created=Order.objects.get_or_create(customer=customer , complete=False) #this function query an object if it doesnot created then create it 
-        items = order.orderitem_set.all() #query the child object by setting parent value then the child object so it will give all orderitems that have the order variable as parent 
-        cartItems= order.get_cart_items
-    else:
-        items=[]
-        order={ 'get_cart_total' : 0 , 'get_cart_items' : 0 , 'shipping' : False}
-        cartItems=order['get_cart_items']
+    data       = cartData(request)
+    cartItems  = data['cartItems']
+    order      = data['order']
+    items      = data['items']
         
     context={'items' : items , 'order' : order , 'cartItems' : cartItems}
     
